@@ -1,0 +1,192 @@
+body {
+    font-family: 'Patrick Hand', cursive;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-image: url('fondo.png'); /* Usa el nombre correcto del archivo */
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    margin: 0;
+    position: relative; /* Necesario para el pseudo-elemento */
+}
+
+body::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.3); /* Capa negra semitransparente */
+    opacity: 0.7; /* Establece la opacidad al 70% */
+    z-index: -1; /* Coloca la capa detrás del contenido principal */
+}
+
+/* Estilos para el contenedor de configuración */
+.settings {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  flex-direction: column; /* Cambia la dirección a vertical */
+  align-items: center;
+}
+
+/* Estilos para el botón de silencio */
+#muteButton {
+  background-color: transparent;
+  border: none;
+  font-size: 2em; /* Aumenta el tamaño del icono */
+  cursor: pointer;
+  margin-bottom: 10px; /* Agrega espacio debajo del icono */
+}
+
+/* Estilos para el control de volumen */
+#volumeSlider {
+  width: 5px; /* Reduce el ancho del control deslizante */
+  height: 100px; /* Aumenta la altura del control deslizante */
+  appearance: slider-vertical; /* Fuerza la apariencia vertical */
+  -webkit-appearance: slider-vertical; /* Para navegadores basados en WebKit */
+}
+
+.container {
+  text-align: center;
+  padding: 30px;
+  border: 2px solid #fff;
+  border-radius: 15px;
+  background-color: rgba(255, 255, 255, 0.8); /* Aumenta la transparencia del contenedor */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: 80%;
+  max-width: 800px;
+  position: relative; /* Necesario para el pseudo-elemento */
+  overflow: hidden; /* Oculta los números que se salgan del contenedor */
+}
+
+.container::before {
+  content: "0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9"; /* Aún más números */
+  font-size: 4em; /* Reduce el tamaño de la fuente para que quepan más números */
+  color: rgba(0, 0, 0, 0.8); /* Ajusta la transparencia a 80% */
+  position: absolute;
+  top: 0; /* Alinea en la parte superior */
+  left: 0; /* Alinea a la izquierda */
+  width: 100%;
+  height: 100%;
+  letter-spacing: 1em; /* Espaciado entre los números */
+  line-height: 3em; /* Espaciado vertical entre las líneas */
+  pointer-events: none;
+  z-index: -1;
+  text-align: justify; /* Distribuye los números horizontalmente */
+  transform: rotate(-5deg); /* Inclina los números */
+  text-justify: inter-word; /* Distribuye el espacio extra entre las palabras */
+}
+
+h1 {
+  color: #ff6b6b;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  font-size: 3em;
+  margin-bottom: -0.5em;
+  margin-top: 0;
+}
+
+#pregunta {
+    font-size: 2.25em;
+    color: #3498db;
+    margin-bottom: 0;
+}
+
+#numero-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5em;
+    margin: 0;
+    color: #e67e22;
+    -webkit-text-stroke: 1px black; /* Contorno negro (WebKit) */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    position: relative; /* Necesario para el desplazamiento vertical */
+    animation: verticalBounce 2s ease-in-out infinite alternate; /* Aplica la animación */
+}
+
+#numero-mostrado {
+    margin-right: 5px;
+    -webkit-text-stroke: 1px black;
+}
+
+#nombre-numero {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #1E8449; /* Verde esmeralda oscuro */
+    -webkit-text-stroke: 0px black;  /* quitar contorno nombre  */
+    text-shadow: none;
+}
+
+#opciones-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 15px;
+    min-height: 6em;
+}
+
+.opcion {
+  padding: 10px 20px;
+  margin: 0;
+  font-size: 3em;
+  font-family: 'Covered By Your Grace', cursive;
+  background-color: #9b59b6;
+  color: white;
+  border: 2px solid #fff;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease-in-out;
+  flex: 1;
+  max-width: 30%;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  -webkit-text-stroke: 1px black;
+}
+
+.opcion:hover {
+  background-color: #8e44ad;
+  transform: scale(1.1);
+}
+
+#mensaje {
+  font-weight: bold;
+  margin-top: 3px;
+  font-size: 1.95em;
+  color: #1E8449; /* Verde esmeralda oscuro */
+  min-height: 2em;
+  margin-bottom: 0;
+}
+
+#siguiente {
+  padding: 15px 30px;
+  font-size: 2.1em;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-top: 0;
+  margin-bottom: -0.5em;
+  transition: background-color 0.3s ease, transform 0.2s ease-in-out;
+}
+
+#siguiente:hover {
+  background-color: #2980b9;
+  transform: scale(1.1);
+}
+
+/* Definición de la animación "verticalBounce" */
+@keyframes verticalBounce {
+  0% {
+    transform: translateY(0); /* Posición inicial */
+  }
+  100% {
+    transform: translateY(20px); /* Se desplaza hacia abajo */
+  }
+}
