@@ -18,6 +18,7 @@ let opciones = [];
 let isMuted = false;
 let gameStarted = false; // Variable para controlar si el juego ha comenzado
 const efectosVolumen = 0.5; // Volumen por defecto para los efectos de sonido
+const volumenInicialMusica = 0.1;
 
 const nombresNumeros = {
   0: "cero",
@@ -69,11 +70,29 @@ function asignarColorAleatorio(elemento) {
 }
 
 function playSound(sound) {
-    if (sound === backgroundMusic && isMuted) {
-        return; // No reproducir la música de fondo si está silenciada
+  sound.currentTime = 0; // Reinicia el sonido al principio
+  sound.play();
+}
+
+function playNumeroAudio(numero) {
+    let audio;
+    switch (numero) {
+        case 0: audio = ceroAudio; break;
+        case 1: audio = unoAudio; break;
+        case 2: audio = dosAudio; break;
+        case 3: audio = tresAudio; break;
+        case 4: audio = cuatroAudio; break;
+        case 5: audio = cincoAudio; break;
+        case 6: audio = seisAudio; break;
+        case 7: audio = sieteAudio; break;
+        case 8: audio = ochoAudio; break;
+        case 9: audio = nueveAudio; break;
+        case 10: audio = diezAudio; break;
+        default: return; // No hacer nada si el número no es válido
     }
-    sound.currentTime = 0; // Reinicia el sonido al principio
-    sound.play();
+    
+    audio.currentTime = 0;
+    audio.play();
 }
 
 function mostrarPregunta() {
@@ -93,20 +112,21 @@ function mostrarPregunta() {
   opcion2.textContent = opciones[1];
   opcion3.textContent = opciones[2];
 
-  // Asignar estilos y colores aleatorios a las opciones
+   // Asignar estilos y colores aleatorios a las opciones
   asignarColorAleatorio(opcion1);
   asignarColorAleatorio(opcion2);
   asignarColorAleatorio(opcion3);
 
-  opcion1.style.fontFamily = "'Patrick Hand', cursive";
-  opcion1.style.fontSize = "3em";
-  opcion1.style.textShadow = "1px 1px 2px rgba(0, 0, 0, 0.5)";
-  opcion2.style.fontFamily = "'Patrick Hand', cursive";
-  opcion2.style.fontSize = "3em";
-  opcion2.style.textShadow = "1px 1px 2px rgba(0, 0, 0, 0.5)";
-  opcion3.style.fontFamily = "'Patrick Hand', cursive";
-  opcion3.style.fontSize = "3em";
-  opcion3.style.textShadow = "1px 1px 2px rgba(0, 0, 0, 0.5)";
+   // Aplicar la misma fuente, tamaño y sombra de texto a las opciones
+   opcion1.style.fontFamily = "'Patrick Hand', cursive";
+   opcion1.style.fontSize = "3em";
+   opcion1.style.textShadow = "2px 2px 4px rgba(0, 0, 0, 0.3)";
+   opcion2.style.fontFamily = "'Patrick Hand', cursive";
+   opcion2.style.fontSize = "3em";
+   opcion2.style.textShadow = "2px 2px 4px rgba(0, 0, 0, 0.3)";
+   opcion3.style.fontFamily = "'Patrick Hand', cursive";
+   opcion3.style.fontSize = "3em";
+   opcion3.style.textShadow = "2px 2px 4px rgba(0, 0, 0, 0.3)";
 
   mensaje.textContent = "";
 }
@@ -116,8 +136,7 @@ function verificarRespuesta(opcionSeleccionada) {
     mensaje.textContent = "¡Correcto! ¡Bien hecho!";
     mensaje.style.color = "green";
     nombreNumero.textContent = nombresNumeros[numeroCorrecto];
-    correctSound.volume = efectosVolumen; //Establecer volumen
-    playSound(correctSound);
+    playNumeroAudio(numeroCorrecto);
   } else {
     mensaje.textContent = "¡Inténtalo de nuevo! Ese no es el número.";
     mensaje.style.color = "red";
@@ -148,7 +167,7 @@ volumeSlider.addEventListener('input', () => {
 // Función para iniciar el juego y la música
 function startGame() {
   if (!gameStarted) {
-    backgroundMusic.volume = volumeSlider.value;
+    backgroundMusic.volume = volumenInicialMusica;
     backgroundMusic.muted = isMuted; // Asegurarse de que el estado de silencio se aplique
 
     // Intenta reproducir la música y captura cualquier error
