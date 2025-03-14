@@ -13,6 +13,24 @@ const backgroundMusic = document.getElementById('backgroundMusic');
 const muteButton = document.getElementById('muteButton');
 const volumeSlider = document.getElementById('volumeSlider');
 
+// Crear el elemento para la carita triste
+const sadFace = document.createElement('span');
+sadFace.textContent = '😔';
+sadFace.style.fontSize = '3em';
+sadFace.style.display = 'none'; // Inicialmente oculto
+document.getElementById('numero-container').appendChild(sadFace);
+
+// Crear el elemento para la carita feliz
+const happyFace = document.createElement('span');
+happyFace.textContent = '😊';
+happyFace.style.fontSize = '3em';
+happyFace.style.display = 'none'; // Inicialmente oculto
+document.getElementById('numero-container').appendChild(happyFace);
+
+// Crear el elemento para el sonido de aplausos
+const applauseSound = new Audio('sound/palmas.mp3');
+applauseSound.volume = 0.3; // Establecer el volumen bajo
+
 let numeroCorrecto;
 let opciones = [];
 let isMuted = false;
@@ -99,6 +117,8 @@ function mostrarPregunta() {
   numeroCorrecto = generarNumeroAleatorio();
   numeroMostrado.textContent = numeroCorrecto;
   nombreNumero.textContent = '';
+  sadFace.style.display = 'none'; // Ocultar la carita triste
+  happyFace.style.display = 'none'; // Ocultar la carita feliz
 
   // Aplicar el mismo estilo y color al número mostrado
   numeroMostrado.style.fontFamily = "'Patrick Hand', cursive";
@@ -137,12 +157,29 @@ function verificarRespuesta(opcionSeleccionada) {
     mensaje.style.color = "green";
     nombreNumero.textContent = nombresNumeros[numeroCorrecto];
     playNumeroAudio(numeroCorrecto);
+    
+    // Lanzar confeti
+    const jsConfetti = new JSConfetti()
+    jsConfetti.addConfetti()
+    sadFace.style.display = 'none'; // Ocultar la carita triste si estaba visible
+    happyFace.style.display = 'inline'; // Mostrar la carita feliz
+    correctSound.volume = efectosVolumen; //Establecer volumen
+    correctSound.src = 'sound/correct.mp3';
+    playSound(correctSound);
+    
+    // Reproducir el sonido de aplausos con volumen bajo
+    applauseSound.currentTime = 0;
+    applauseSound.play();
+
   } else {
     mensaje.textContent = "¡Inténtalo de nuevo! Ese no es el número.";
     mensaje.style.color = "red";
     nombreNumero.textContent = '';
     incorrectSound.volume = efectosVolumen; //Establecer volumen
+    incorrectSound.src = 'sound/incorrect.mp3';
     playSound(incorrectSound);
+    sadFace.style.display = 'inline'; // Mostrar la carita triste
+    happyFace.style.display = 'none'; // Ocultar la carita feliz
   }
 }
 
@@ -169,7 +206,7 @@ function startGame() {
   if (!gameStarted) {
     backgroundMusic.volume = volumenInicialMusica;
     backgroundMusic.muted = isMuted; // Asegurarse de que el estado de silencio se aplique
-
+    backgroundMusic.src = 'sound/background.mp3';
     // Intenta reproducir la música y captura cualquier error
     backgroundMusic.play().catch(error => {
       console.error("Error al reproducir la música de fondo:", error);
@@ -192,5 +229,21 @@ function startMusicOnNext() {
 // Iniciar el juego al primer toque o clic
 document.addEventListener('mousedown', startGame);
 document.addEventListener('touchstart', startGame);
+
+// Cargar los audios
+correctSound.src = "sound/correct.mp3";
+incorrectSound.src = "sound/incorrect.mp3";
+backgroundMusic.src = "sound/background.mp3";
+ceroAudio.src = "sound/cero.mp3";
+unoAudio.src = "sound/uno.mp3";
+dosAudio.src = "sound/dos.mp3";
+tresAudio.src = "sound/tres.mp3";
+cuatroAudio.src = "sound/cuatro.mp3";
+cincoAudio.src = "sound/cinco.mp3";
+seisAudio.src = "sound/seis.mp3";
+sieteAudio.src = "sound/siete.mp3";
+ochoAudio.src = "sound/ocho.mp3";
+nueveAudio.src = "sound/nueve.mp3";
+diezAudio.src = "sound/diez.mp3";
 
 mostrarPregunta();
