@@ -1,3 +1,4 @@
+/* Estilos generales */
 body {
     font-family: 'Patrick Hand', cursive;
     display: flex;
@@ -26,12 +27,13 @@ body::before {
 
 /* Estilos para el contenedor de configuración */
 .settings {
-  position: absolute;
+  position: fixed; /* Cambiado a fixed */
   top: 10px;
   right: 10px;
   display: flex;
   flex-direction: column; /* Cambia la dirección a vertical */
   align-items: center;
+  z-index: 2000; /* Asegura que esté encima de otros elementos */
 }
 
 /* Estilos para el botón de silencio */
@@ -188,5 +190,58 @@ h1 {
   }
   100% {
     transform: translateY(20px); /* Se desplaza hacia abajo */
+  }
+}
+
+/* Estilos para la puntuación */
+#puntuacion {
+  font-size: 2em;
+  color: #27ae60; /* Un verde atractivo */
+  font-weight: bold;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  margin-top: 10px;
+}
+
+/* Estilos para la lista de logros */
+#logros {
+  list-style-type: none;
+  padding: 0;
+  margin-top: 10px;
+  text-align: center;
+  display: none;
+}
+
+#logros li {
+  font-size: 1.5em;
+  color: #7d3c98; /* Un gris oscuro */
+  margin-bottom: 0px;
+}
+
+/* Estilos para el mensaje emergente de logro */
+.logro-popup {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(52, 152, 219, 0.9); /* Un azul más claro y semi-transparente */
+  color: #fff; /* Texto blanco */
+  padding: 10px 20px;
+  border-radius: 5px;
+  z-index: 1000;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Agrega una sombra suave */
+  border: 1px solid #fff; /* Agrega un borde blanco */
+  font-size: 1.5em; /* Aumenta el tamaño de la letra */
+}
+
+.logro-popup.show {
+  opacity: 1;
+}
+
+/* Media Queries para diseño responsivo */
+@media (max-width: 480px) {
+  .settings .controls-top-right .volume-wrapper {
+    display: none; /* Ocultar el control de volumen */
   }
 }

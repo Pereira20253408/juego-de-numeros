@@ -4,13 +4,16 @@ const opcion1 = document.getElementById('opcion1');
 const opcion2 = document.getElementById('opcion2');
 const opcion3 = document.getElementById('opcion3');
 const mensaje = document.getElementById('mensaje');
-const siguienteBtn = document.getElementById('siguiente');
+//const siguienteBtn = document.getElementById('siguiente'); // Eliminado
+const puntuacionElement = document.getElementById('puntuacion');
+const logrosLista = document.getElementById('logros');
+const logroPopup = document.getElementById('logro-popup'); // Referencia al popup
+const muteBtn = document.getElementById('muteButton'); // Boton de silencio
 
 // Elementos de sonido
 const correctSound = document.getElementById('correctSound');
 const incorrectSound = document.getElementById('incorrectSound');
 const backgroundMusic = document.getElementById('backgroundMusic');
-const muteButton = document.getElementById('muteButton');
 const volumeSlider = document.getElementById('volumeSlider');
 
 // Crear el elemento para la carita triste
@@ -29,14 +32,18 @@ document.getElementById('numero-container').appendChild(happyFace);
 
 // Crear el elemento para el sonido de aplausos
 const applauseSound = new Audio('sound/palmas.mp3');
-applauseSound.volume = 0.3; // Establecer el volumen bajo
+applauseSound.volume = 0.1; // Establecer el volumen bajo
 
 let numeroCorrecto;
 let opciones = [];
-let isMuted = false;
+let isMuted = false; // Variable para controlar si la música de fondo está silenciada
 let gameStarted = false; // Variable para controlar si el juego ha comenzado
 const efectosVolumen = 0.5; // Volumen por defecto para los efectos de sonido
 const volumenInicialMusica = 0.1;
+
+// Inicializar la puntuación
+let puntuacion = parseInt(localStorage.getItem('puntuacion')) || 0; // Cargar desde localStorage o 0
+puntuacionElement.textContent = `Puntuación: ${puntuacion}`;
 
 const nombresNumeros = {
   0: "cero",
@@ -66,6 +73,28 @@ const coloresOpciones = [
   "#ff9800", // Naranja
   "#ff5722"  // Naranja rojizo
 ];
+
+// Definir los logros
+const logros = [
+    { id: 1, nombre: 'Primeros Pasos', descripcion: 'Acertaste tu primer número.', criterio: 10 },
+    { id: 2, nombre: 'Aprendiz de Números', descripcion: 'Acertaste 5 números.', criterio: 50 },
+    { id: 3, nombre: 'Maestro de los Números', descripcion: 'Acertaste 10 números.', criterio: 100 },
+    { id: 4, nombre: 'Experto en Números', descripcion: 'Acertaste 20 números.', criterio: 200 },
+    { id: 5, nombre: 'Explorador de Números', descripcion: 'Acertaste 30 números.', criterio: 300 },
+    { id: 6, nombre: 'Matemático Curioso', descripcion: 'Acertaste 40 números.', criterio: 400 },
+    { id: 7, nombre: 'Contador Veloz', descripcion: 'Acertaste 50 números.', criterio: 500 },
+    { id: 8, nombre: 'Rey/Reina de los Números', descripcion: 'Acertaste 75 números.', criterio: 750 },
+    { id: 9, nombre: 'Genio Matemático', descripcion: 'Acertaste 100 números.', criterio: 1000 },
+    { id: 10, nombre: 'Leyenda Numérica', descripcion: 'Acertaste 150 números.', criterio: 1500 }
+];
+
+// Cargar logros alcanzados desde localStorage (si existen)
+let logrosAlcanzados = JSON.parse(localStorage.getItem('logrosAlcanzados')) || [];
+
+// Función para guardar los logros alcanzados en localStorage
+function guardarLogros() {
+    localStorage.setItem('logrosAlcanzados', JSON.stringify(logrosAlcanzados));
+}
 
 function generarNumeroAleatorio() {
   return Math.floor(Math.random() * 11);
@@ -151,12 +180,57 @@ function mostrarPregunta() {
   mensaje.textContent = "";
 }
 
+// Función para verificar y mostrar los logros desbloqueados
+let logrosMostrados = false;
+function verificarLogros() {
+    logros.forEach(logro => {
+        if (puntuacion >= logro.criterio && !logrosAlcanzados.includes(logro.id)) {
+            logrosAlcanzados.push(logro.id);
+            mostrarLogro(logro);
+            mostrarLogroPopup(logro.nombre); // Mostrar el popup
+            guardarLogros();
+            console.log(`¡Logro desbloqueado: ${logro.nombre}!`); // Depuración
+           if (!logrosMostrados) {
+                logrosLista.style.display = 'block';
+                logrosMostrados = true;
+            }
+        }
+    });
+}
+
+// Función para mostrar un logro desbloqueado
+function mostrarLogro(logro) {
+    const li = document.createElement('li');
+    li.textContent = `${logro.nombre}: ${logro.descripcion}`;
+    logrosLista.appendChild(li);
+}
+
+// Función para mostrar el popup del logro
+function mostrarLogroPopup(nombreLogro) {
+    logroPopup.textContent = `¡Logro desbloqueado: ${nombreLogro}!`;
+    logroPopup.classList.add('show');
+
+    setTimeout(() => {
+        logroPopup.classList.remove('show');
+    }, 3000); // Ocultar después de 3 segundos
+}
+
 function verificarRespuesta(opcionSeleccionada) {
   if (opcionSeleccionada === numeroCorrecto) {
     mensaje.textContent = "¡Correcto! ¡Bien hecho!";
     mensaje.style.color = "green";
     nombreNumero.textContent = nombresNumeros[numeroCorrecto];
     playNumeroAudio(numeroCorrecto);
+
+    // Incrementar la puntuación
+    puntuacion += 10; // Otorga 10 puntos por cada respuesta correcta
+    puntuacionElement.textContent = `Puntuación: ${puntuacion}`;
+
+    // Guardar la puntuación en localStorage
+    localStorage.setItem('puntuacion', puntuacion.toString());
+
+    // Verificar si se desbloqueó un logro
+    verificarLogros();
     
     // Lanzar confeti
     const jsConfetti = new JSConfetti()
@@ -171,6 +245,8 @@ function verificarRespuesta(opcionSeleccionada) {
     applauseSound.currentTime = 0;
     applauseSound.play();
 
+    // Mostrar la siguiente pregunta automáticamente
+    setTimeout(mostrarPregunta, 1500); // Esperar 1.5 segundos antes de mostrar la siguiente pregunta
   } else {
     mensaje.textContent = "¡Inténtalo de nuevo! Ese no es el número.";
     mensaje.style.color = "red";
@@ -187,13 +263,13 @@ opcion1.addEventListener('click', () => verificarRespuesta(opciones[0]));
 opcion2.addEventListener('click', () => verificarRespuesta(opciones[1]));
 opcion3.addEventListener('click', () => verificarRespuesta(opciones[2]));
 
-siguienteBtn.addEventListener('click', mostrarPregunta);
+//siguienteBtn.addEventListener('click', mostrarPregunta); // Eliminado
 
 // Funcionalidad de silencio (solo para la música de fondo)
-muteButton.addEventListener('click', () => {
+muteBtn.addEventListener('click', () => {
   isMuted = !isMuted;
   backgroundMusic.muted = isMuted; // Solo silenciar la música de fondo
-  muteButton.textContent = isMuted ? "🔇" : "🔊";
+  muteBtn.textContent = isMuted ? "🔇" : "🔊";
 });
 
 // Funcionalidad del control de volumen (solo para la música de fondo)
@@ -207,12 +283,11 @@ function startGame() {
     backgroundMusic.volume = volumenInicialMusica;
     backgroundMusic.muted = isMuted; // Asegurarse de que el estado de silencio se aplique
     backgroundMusic.src = 'sound/background.mp3';
-    // Intenta reproducir la música y captura cualquier error
+        // Intenta reproducir la música y captura cualquier error
     backgroundMusic.play().catch(error => {
       console.error("Error al reproducir la música de fondo:", error);
       mensaje.textContent = "El sonido de fondo está bloqueado. Interactúa con el juego para habilitarlo.";
       // Si la reproducción automática falla, adjunta el evento de clic al botón "Siguiente"
-      siguienteBtn.addEventListener('click', startMusicOnNext, { once: true });
     });
 
     gameStarted = true;
@@ -245,5 +320,19 @@ sieteAudio.src = "sound/siete.mp3";
 ochoAudio.src = "sound/ocho.mp3";
 nueveAudio.src = "sound/nueve.mp3";
 diezAudio.src = "sound/diez.mp3";
+
+// Al cargar la página, mostrar los logros ya alcanzados
+window.onload = () => {
+    // Mostrar la lista de logros si hay logros guardados
+    if (logrosAlcanzados.length > 0) {
+        logrosLista.style.display = 'block';
+    }
+    logrosAlcanzados.forEach(logroId => {
+        const logro = logros.find(l => l.id === logroId);
+        if (logro) {
+            mostrarLogro(logro);
+        }
+    });
+};
 
 mostrarPregunta();

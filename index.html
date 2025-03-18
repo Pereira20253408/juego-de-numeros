@@ -9,6 +9,12 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Covered+By+Your+Grace&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/js-confetti@latest/dist/js-confetti.browser.js"></script>
+  <script>
+    // Ocultar la lista de logros antes de que se renderice la página
+    document.addEventListener('DOMContentLoaded', function() {
+      document.getElementById('logros').style.display = 'none';
+    });
+  </script>
 </head>
 <body>
 
@@ -30,25 +36,30 @@
       <button class="opcion" id="opcion3"></button>
     </div>
     <p id="mensaje"></p>
-    <button id="siguiente">Siguiente</button>
+    <p id="puntuacion">Puntuación: 0</p>
+    <h2>Logros:</h2>
+    <ul id="logros"></ul>
   </div>
 
-  <audio id="correctSound" src="correct.mp3" preload="auto"></audio>
-  <audio id="incorrectSound" src="incorrect.mp3" preload="auto"></audio>
-  <audio id="backgroundMusic" src="background.mp3" loop preload="auto"></audio>
+  <audio id="correctSound" src="sound/correct.mp3" preload="auto"></audio>
+  <audio id="incorrectSound" src="sound/incorrect.mp3" preload="auto"></audio>
+  <audio id="backgroundMusic" src="sound/background.mp3" loop preload="auto"></audio>
 
   <!-- Audios de los números -->
-  <audio id="ceroAudio" src="cero.mp3" preload="auto"></audio>
-  <audio id="unoAudio" src="uno.mp3" preload="auto"></audio>
-  <audio id="dosAudio" src="dos.mp3" preload="auto"></audio>
-  <audio id="tresAudio" src="tres.mp3" preload="auto"></audio>
-  <audio id="cuatroAudio" src="cuatro.mp3" preload="auto"></audio>
-  <audio id="cincoAudio" src="cinco.mp3" preload="auto"></audio>
-  <audio id="seisAudio" src="seis.mp3" preload="auto"></audio>
-  <audio id="sieteAudio" src="siete.mp3" preload="auto"></audio>
-  <audio id="ochoAudio" src="ocho.mp3" preload="auto"></audio>
-  <audio id="nueveAudio" src="nueve.mp3" preload="auto"></audio>
-  <audio id="diezAudio" src="diez.mp3" preload="auto"></audio>
+  <audio id="ceroAudio" src="sound/cero.mp3" preload="auto"></audio>
+  <audio id="unoAudio" src="sound/uno.mp3" preload="auto"></audio>
+  <audio id="dosAudio" src="sound/dos.mp3" preload="auto"></audio>
+  <audio id="tresAudio" src="sound/tres.mp3" preload="auto"></audio>
+  <audio id="cuatroAudio" src="sound/cuatro.mp3" preload="auto"></audio>
+  <audio id="cincoAudio" src="sound/cinco.mp3" preload="auto"></audio>
+  <audio id="seisAudio" src="sound/seis.mp3" preload="auto"></audio>
+  <audio id="sieteAudio" src="sound/siete.mp3" preload="auto"></audio>
+  <audio id="ochoAudio" src="sound/ocho.mp3" preload="auto"></audio>
+  <audio id="nueveAudio" src="sound/nueve.mp3" preload="auto"></audio>
+  <audio id="diezAudio" src="sound/diez.mp3" preload="auto"></audio>
+
+    <!-- Mensaje emergente de logro -->
+    <div id="logro-popup" class="logro-popup"></div>
 
   <script src="script.js"></script>
 </body>
